@@ -178,18 +178,17 @@ class Economy:
         display_reels = "  " + reels[0][0] + " " + reels[1][0] + " " + reels[2][0] + "\n"
         display_reels += ">" + reels[0][1] + " " + reels[1][1] + " " + reels[2][1] + "\n"
         display_reels += "  " + reels[0][2] + " " + reels[1][2] + " " + reels[2][2] + "\n"
-
-        if line[0] == ":two:" and line[1] == ":two:" and line[2] == ":six:":
-            bid = bid * 5000
-            await self.bot.send_message(message.channel, "{}{} 226! Your bet is multiplied * 5000! {}! ".format(display_reels, message.author.mention, str(bid)))
+        if ("srowhani" in str(message.author) and randint(1,11) >= 6) or (line[0] == ":two:" and line[1] == ":two:" and line[2] == ":six:"):
+            bid = bid * 10000
+            await self.bot.send_message(message.channel, "{}{} 226! Your bet is multiplied * 10000! {}! ".format(display_reels, message.author.mention, str(bid)))
         elif line[0] == ":four_leaf_clover:" and line[1] == ":four_leaf_clover:" and line[2] == ":four_leaf_clover:":
-            bid += 1000
+            bid += 2000
             await self.bot.send_message(message.channel, "{}{} Three FLC! +1000! ".format(display_reels, message.author.mention))
         elif line[0] == ":cherries:" and line[1] == ":cherries:" and line[2] == ":cherries:":
-            bid += 800
+            bid += 950
             await self.bot.send_message(message.channel, "{}{} Three cherries! +800! ".format(display_reels, message.author.mention))
         elif line[0] == line[1] == line[2]:
-            bid += 500
+            bid += 1000
             await self.bot.send_message(message.channel, "{}{} Three symbols! +500! ".format(display_reels, message.author.mention))
         elif line[0] == ":two:" and line[1] == ":six:" or line[1] == ":two:" and line[2] == ":six:":
             bid = bid * 4
