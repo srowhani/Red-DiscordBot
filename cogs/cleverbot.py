@@ -15,8 +15,7 @@ class CleverBot:
     async def ask(self, *question):
         try:
             await self.bot.say(self.cb.ask(" ".join(question)))
-        except:
-            print("Error")
+        except: pass
 
 def setup(bot):
     n = CleverBot(bot)
