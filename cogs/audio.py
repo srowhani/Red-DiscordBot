@@ -142,11 +142,13 @@ class Audio:
         """
         msg = ctx.message
         if self.music_player.is_playing():
-            if await self.is_alone_or_admin(msg):
-                self.music_player.paused = False
-                self.music_player.stop()
-            else:
-                await self.vote_skip(msg)
+            self.music_player.paused = False
+            self.music_player.stop()
+            # if await self.is_alone_or_admin(msg):
+            #     self.music_player.paused = False
+            #     self.music_player.stop()
+            # else:
+            #     await self.vote_skip(msg)
 
     async def vote_skip(self, msg):
         v_channel = msg.server.me.voice_channel
@@ -215,15 +217,12 @@ class Audio:
         """
         msg = ctx.message
         if self.music_player.is_playing():
-            if await self.is_alone_or_admin(msg):
-                self.current = -1
-                if self.downloader["URL"]:
-                    self.playlist = [self.downloader["URL"]]
-                else: # local
-                    self.playlist = [self.downloader["ID"]]
-                await self.bot.say("I will play this song on repeat.")
-            else:
-                await self.bot.say("I'm in queue mode. Controls are disabled if you're in a room with multiple people.")
+            self.current = -1
+            if self.downloader["URL"]:
+                self.playlist = [self.downloader["URL"]]
+            else: # local
+                self.playlist = [self.downloader["ID"]]
+            await self.bot.say("I will play this song on repeat.")
 
     @commands.command(pass_context=True, no_pm=True)
     async def shuffle(self, ctx):
@@ -351,7 +350,7 @@ class Audio:
             self.music_player.paused = True
             self.music_player.pause()
             await self.bot.say("Song paused.")
-            
+
     @commands.command()
     async def resume(self):
         """Resumes paused song."""
@@ -617,7 +616,9 @@ class Audio:
                 url = url.replace("[SEARCH:]", "")
                 url = "https://youtube.com/watch?v=" + yt.extract_info(url, download=False)["entries"][0]["id"]
                 v = yt.extract_info(url, download=False)
-            if v["duration"] > self.settings["MAX_LENGTH"]: raise MaximumLength("Track exceeded maximum length. See help audioset maxlength")
+            if v["duration"] > self.settings["MAX_LENGTH"]:
+                self.bot.say("Track exceeded maximum length. See help audioset maxlength")
+                raise MaximumLength("Track exceeded maximum length. See help audioset maxlength")
             if not os.path.isfile("data/audio/cache/" + v["id"]):
                 v = yt.extract_info(url, download=True)
             audio.downloader = {"DONE" : True, "TITLE" : v["title"], "ID" : v["id"], "URL" : url, "DURATION" : v["duration"], "DOWNLOADING" : False} #Errors out here if invalid link
@@ -751,7 +752,7 @@ class Audio:
 
     async def parse_yt_playlist(self, url):
         try:
-            if not "www.youtube.com/playlist?list=" in url:   
+            if not "www.youtube.com/playlist?list=" in url:
                 url = url.split("&")
                 url = "https://www.youtube.com/playlist?" + [x for x in url if "list=" in x][0]
             playlist = []

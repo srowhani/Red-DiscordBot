@@ -48,6 +48,10 @@ class Settings:
     def email(self):
         return self.bot_settings["EMAIL"]
 
+    @property
+    def wolframkey(self):
+        return self.bot_settings["WOLFRAM_API_KEY"]
+        
     @email.setter
     def email(self,value):
         self.bot_settings["EMAIL"] = value

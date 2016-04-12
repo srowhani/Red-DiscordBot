@@ -1,29 +1,31 @@
 import discord
 from discord.ext import commands
-from random import randint
-from random import choice
 import random
 import aiohttp
 import asyncio
 import os
 import wolframalpha
-from .utils import checks
+from .utils.settings import Settings
 
 class Wolfram:
-    "( ͡° ͜ʖ ͡°)"
     def __init__(self, bot):
+        key = Settings().wolframkey
         self.bot = bot
-        self.client = wolframalpha.Client("RGTRAE-AVKP22Q8H7")
+        self.client = wolframalpha.Client(key)
 
 
-    @commands.command(no_pm=False)
-    async def wolfram(self, q: str):
+    @commands.command()
+    async def wolfram(self, *question):
+        str = ''
         try:
-            r = self.client.query(q)
+            r = self.client.query(" ".join(question))
             for pod in r.pods:
-                await self.bot.say("**{}**: {}".format(pod.title, pod.text))
-        except:
-            await self.bot.say("Sorry, unable to find any results :(")
+                if not pod.text:
+                    str = "**{}**:\n\t{}".format(pod.title, pod.img)
+                else:
+                    str = "**{}**:\n\t{}".format(pod.title, pod.text)
+                await self.bot.say(str)
+        except: pass
 
 def setup(bot):
     n = Wolfram(bot)
